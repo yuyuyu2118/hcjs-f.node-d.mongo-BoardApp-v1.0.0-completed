@@ -1,3 +1,5 @@
+//const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:60190';
+
 const threadSectionDOM = document.querySelector(".thread-section");
 const inputTextDOM = document.getElementById("inputTitle");
 const inputContentDOM = document.getElementById("inputContent");
@@ -5,6 +7,7 @@ const formDOM = document.querySelector(".form-section");
 
 let inputText = "";
 let inputContentText = "";
+let editingThreadId = null;
 
 //getメソッド
 const getAllThread = async () => {
@@ -22,7 +25,7 @@ const getAllThread = async () => {
         <h3>${title}</h3>
         <p>${content}</p>
         <img src="./image/deleteIcon.png" alt="deleteIcon" width="30" height="30" class="deleteButton" data-id="${_id}">
-        <img src="./image/editIcon.png" alt="editIcon" width="30" height="30" class="editButton">
+        <img src="./image/editIcon.png" alt="editIcon" width="30" height="30" class="editButton" data-id="${_id}">
       </div>
       `;
       })
@@ -45,13 +48,23 @@ inputContentDOM.addEventListener("change", (e) => {
 formDOM.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  inputText = inputTextDOM.value;
+  inputContentText = inputContentDOM.value;
+
   if (inputText && inputContentText) {
-    console.log("add data");
     try {
-      await axios.post("http://localhost:60190/api/v1/thread", {
-        title: inputText,
-        content: inputContentText,
-      });
+      if (editingThreadId) {
+        await axios.put(`http://localhost:60190/api/v1/threads/${editingThreadId}`, {
+          title: inputText,
+          content: inputContentText,
+        });
+        editingThreadId = null; // 編集が完了したのでリセット
+      } else {
+        await axios.post("http://localhost:60190/api/v1/thread", {
+          title: inputText,
+          content: inputContentText,
+        });
+      }
       getAllThread();
       inputTextDOM.value = "";
       inputContentDOM.value = "";
@@ -70,6 +83,21 @@ threadSectionDOM.addEventListener("click", async (e) => {
     try {
       await axios.delete(`http://localhost:60190/api/v1/threads/${threadID}`); //削除
       getAllThread(); //削除後に再度表示
+    } catch (error) {
+      console.log(error);
+    }
+  }
+});
+
+// 編集メソッド
+threadSectionDOM.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("editButton")) {
+    // クリックしたものがeditButtonクラスを持っている
+    editingThreadId = e.target.dataset.id;
+    try {
+      const threadToEdit = await axios.get(`http://localhost:60190/api/v1/thread/${editingThreadId}`);
+      inputTextDOM.value = threadToEdit.data.title;
+      inputContentDOM.value = threadToEdit.data.content;
     } catch (error) {
       console.log(error);
     }
