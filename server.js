@@ -6,6 +6,7 @@ const Thread   = require("./models/Thread")
 const PORT     = 60190;
 const app      = express();
 
+app.use(express.json());
 app.use(express.static("public"));  //静的ファイルはpublicフォルダを見に行く
 
 app.use(function(req, res, next) {

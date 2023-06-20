@@ -1,4 +1,9 @@
 const formDOM = document.querySelector(".thread-section");
+const inputTextDOM = document.getElementById("inputTitle");
+const inputContentDOM = document.getElementById("inputContent");
+
+let inputText = "";
+let inputContentText = "";
 
 const getAllThread = async () => {
   try {
@@ -25,3 +30,26 @@ const getAllThread = async () => {
 getAllThread();
 
 //postメソッド
+inputTextDOM.addEventListener("change",(e) =>{
+  inputText = e.target.value;
+});
+inputContentDOM.addEventListener("change",(e) =>{
+  inputContentText = e.target.value;
+});
+
+formDOM.addEventListener("submit",async(e) =>{
+  e.preventDefault();
+
+  if(inputText && inputContentText){
+    console.log("add data");
+    try {
+      await axios.post("http://localhost:60190/api/v1/thread",{
+        title: inputText,
+        content: inputContentText,
+      });
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+})
