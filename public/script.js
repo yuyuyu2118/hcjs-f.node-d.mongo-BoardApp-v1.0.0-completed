@@ -1,6 +1,7 @@
-const formDOM = document.querySelector(".thread-section");
+const threadSectionDOM = document.querySelector(".thread-section");
 const inputTextDOM = document.getElementById("inputTitle");
 const inputContentDOM = document.getElementById("inputContent");
+const formDOM = document.querySelector(".form-section");
 
 let inputText = "";
 let inputContentText = "";
@@ -20,8 +21,9 @@ const getAllThread = async () => {
         <p>${content}</p>
       </div>
       `;
-    });
-    formDOM.innerHTML = allThreads;
+    })
+    .join("");
+    threadSectionDOM.innerHTML = allThreads;
   } catch (error) {
     console.log(error);
   }
@@ -47,7 +49,7 @@ formDOM.addEventListener("submit",async(e) =>{
         title: inputText,
         content: inputContentText,
       });
-
+      getAllThread();
     } catch (error) {
       console.log(error);
     }
