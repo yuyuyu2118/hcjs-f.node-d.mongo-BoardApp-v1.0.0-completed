@@ -8,4 +8,11 @@
 (一般的にどのように実装するのか調べる)
 
 ### 見た目をもっとリッチに
-サイドバーを表示したい 
+サイドバーを表示したい
+
+https://cloud.mongodb.com/v2/6490f73095d3ec3e36fb58ad#/metrics/replicaSet/6490f7bbb2465626d8794a47/explorer/test/threads/find
+
+pass: mongoDB
+0k6ZhBI69JFMmDgP
+connect: mongoDB
+mongodb+srv://yuyuyu:<password>@cluster0.uhntkqj.mongodb.net/?retryWrites=true&w=majority
